@@ -1,25 +1,60 @@
 const readlineSync = require('readline-sync');
 const { readFileSync, existsSync } = require('fs');
 
+let result = [];
+
 //quadratic eqation solving
 const quadraticEquationSolve = (a, b, c) => {
     const discriminant = b * b - 4 * a * c;
     const discriminantSqrt = Math.sqrt(discriminant)
 
+    console.log(`Equation is: (${a}) x^2 + (${b}) x + (${c}) = 0`);
+
     if (discriminant > 0) {
         const x1 = (-b + discriminantSqrt) / (2 * a);
         const x2 = (-b - discriminantSqrt) / (2 * a);
-        return [x1, x2]
+        result = [x1, x2]
     } else if (discriminant == 0) {
         const x1 = (-b + discriminantSqrt) / (2 * a);
-        return [x1]
+        result = [x1]
     } else {
-        return []
+        result = []
     }
+    answerShowa(result);
 }
 
 //input values function
-const askUser = (questionPrompt) => readlineSync.question(questionPrompt)
+const askUser = (questionPrompt) => {
+    let input = readlineSync.question(questionPrompt);
+
+    while (isNaN(input)) {
+        console.log('Error. Expected a valid real number, got invalid instead');
+        input = readlineSync.question(questionPrompt);
+    }
+
+    if (questionPrompt === 'a = ' && input === '0') {
+        console.log('Error. a cannot be 0');
+        input = askUser(questionPrompt);
+    }
+
+    return input;
+} 
+
+//showing the result
+const answerShow = (arr) => {
+    const numRoots = arr.length;
+
+    console.log(`There are ${numRoots} roots`);
+
+    if (numRoots === 2) {
+        console.log(`x1 = ${arr[0]}`);
+        console.log(`x2 = ${arr[1]}`);
+    } else if (numRoots === 1) {
+        console.log(`x1 = ${arr[0]}`);
+    } else {
+        return;
+    }
+}
 
 //interactive mode
 const startInteractiveMode = () => {
@@ -32,16 +67,27 @@ const startInteractiveMode = () => {
 //file mode
 const startFileMode = () => {
     const filePath = process.argv[2];
+    const fileExists = existsSync(filePath);
 
-    if (!existsSync(filePath)) {
+    if (!fileExists) {
         console.log(`file ${filePath} does not exist`);
         process.exit(1);
     }
 
     const text = readFileSync(filePath, 'utf8');
-    const argumentsArray = text.split(' ').map(element => Number(element));
+    const argArray = text.split(' ').map(element => Number(element));
+    
+    if (argumentsArray.length !== 3) {
+        console.log('invalid file format');
+        process.exit(1);
+    }
 
-    return solveQuadraticEquation(...argumentsArray);
+    if (argumentsArray[0] === 0) {
+        console.log('Error. a cannot be 0');
+        process.exit(1);
+    }
+
+    return solveQuadraticEquation(...argArray);
 }
 
 //main starter condition

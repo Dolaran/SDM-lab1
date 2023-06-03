@@ -1,4 +1,5 @@
 const readlineSync = require('readline-sync');
+const { readFileSync, existsSync } = require('fs');
 
 //quadratic eqation solving
 const quadraticEquationSolve = (a, b, c) => {
@@ -28,6 +29,24 @@ const startInteractiveMode = () => {
     return solveQuadraticEquation(...answers);
 }
 
-if (process.argv.length == 2) {
-    startInteractiveMode()
+//file mode
+const startFileMode = () => {
+    const filePath = process.argv[2];
+
+    if (!existsSync(filePath)) {
+        console.log(`file ${filePath} does not exist`);
+        process.exit(1);
+    }
+
+    const text = readFileSync(filePath, 'utf8');
+    const argumentsArray = text.split(' ').map(element => Number(element));
+
+    return solveQuadraticEquation(...argumentsArray);
+}
+
+//main starter condition
+if (process.argv.length === 2) {
+    startInteractiveMode();
+} else if (process.argv.length === 3) {
+    startFileMode();
 }

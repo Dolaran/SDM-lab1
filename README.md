@@ -28,4 +28,4 @@ node main.js
 node main.js <path_to_file>
 ```
 
-[Reverted commit]()
+[Reverted commit](https://github.com/Dolaran/SDM-lab1/commit/b0f7c8bba72062ddf2033cf2fbc2ddc66059dfa8)

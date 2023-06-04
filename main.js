@@ -20,7 +20,7 @@ const quadraticEquationSolve = (a, b, c) => {
     } else {
         result = []
     }
-    answerShowa(result);
+    answerShow(result);
 }
 
 //input values function
@@ -61,7 +61,7 @@ const startInteractiveMode = () => {
     const questions = ['a = ', 'b = ', 'c = '];
     const answers = questions.map(element => askUser(element));
 
-    return solveQuadraticEquation(...answers);
+    return quadraticEquationSolve(...answers);
 }
 
 //file mode
@@ -77,17 +77,17 @@ const startFileMode = () => {
     const text = readFileSync(filePath, 'utf8');
     const argArray = text.split(' ').map(element => Number(element));
     
-    if (argumentsArray.length !== 3) {
+    if (argArray.length !== 3) {
         console.log('invalid file format');
         process.exit(1);
     }
 
-    if (argumentsArray[0] === 0) {
+    if (argArray[0] === 0) {
         console.log('Error. a cannot be 0');
         process.exit(1);
     }
 
-    return solveQuadraticEquation(...argArray);
+    return quadraticEquationSolve(...argArray);
 }
 
 //main starter condition
